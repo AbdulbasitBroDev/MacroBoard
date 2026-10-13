@@ -1,0 +1,87 @@
+{
+  "name": "macroblock",
+  "productName": "MacroBlock",
+  "version": "1.0.0",
+  "description": "MacroBlock - a premium block-based (Scratch-style) macro builder for Windows",
+  "main": "src/main/main.js",
+  "author": "MacroBlock",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "prestart": "node scripts/ensure-electron.js",
+    "start": "electron .",
+    "dev": "electron . --enable-logging",
+    "smoke": "cmd /c scripts\\smoke.cmd",
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\"",
+    "test:engine": "node --test \"test/engine.test.js\"",
+    "test:compiler": "node --test \"test/compiler.test.js\"",
+    "test:blocks": "node --test \"test/blocks.test.js\"",
+    "verify": "node scripts/verify-native.js",
+    "ensure-electron": "node scripts/ensure-electron.js",
+    "postinstall": "node scripts/verify-native.js",
+    "dist": "electron-builder --win nsis portable --publish never",
+    "dist:publish": "npm run dist && electron-builder --win nsis --publish always",
+    "dist:dir": "electron-builder --win --dir",
+    "serve": "node scripts/serve-release.js",
+    "test:feed": "node scripts/test-update-feed.js"
+  },
+  "dependencies": {
+    "@fainthit/uiohook-napi-suppress": "^1.6.4",
+    "@nut-tree-fork/nut-js": "^4.2.6",
+    "blockly": "^13.3.0",
+    "electron-updater": "^6.8.9"
+  },
+  "devDependencies": {
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
+    "jsdom": "^27.4.0"
+  },
+  "build": {
+    "appId": "com.macroblock.app",
+    "productName": "MacroBlock",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map"
+    ],
+    "publish": {
+      "provider": "generic",
+      "url": "https://REPLACE-ME.example.com/macroblock"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "appx"
+      ],
+      "electronLanguages": [
+        "en-US"
+      ],
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MacroBlock"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "appx": {
+      "identityName": "MacroBlock",
+      "publisher": "CN=MacroBlock",
+      "publisherDisplayName": "MacroBlock",
+      "applicationId": "MacroBlock",
+      "backgroundColor": "#141824",
+      "displayName": "MacroBlock"
+    }
+  }
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'"
+    />
+    <title>MacroBlock</title>
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/blockly-dark.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ============================ top bar ============================ -->
+      <header id="topbar">
+        <div class="brand">
+          <span class="brand-mark">▣</span>
+          <span class="brand-name">MacroBlock</span>
+        </div>
+
+        <div id="status-pill" class="status-pill" title="Current state">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Loading…</span>
+        </div>
+
+        <div class="topbar-sep"></div>
+
+        <div id="start-info" class="start-info">
+          <span class="start-label">Start</span>
+          <span id="start-desc">—</span>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div id="compile-badge" class="compile-badge" title="Live compile status">
+          <span id="compile-text">—</span>
+        </div>
+
+        <div class="rec-wrap">
+          <button id="btn-record" class="btn btn-ghost" title="Record real input into blocks">
+            <span class="rec-dot"></span> Record
+          </button>
+          <div id="rec-menu" class="ctx-menu rec-menu hidden" role="menu" aria-label="How to record keys">
+            <div class="ctx-head">Record keys as</div>
+            <button type="button" data-rec-mode="text" role="menuitem">
+              <span class="rec-check" aria-hidden="true"></span>As text (write "abc")
+            </button>
+            <button type="button" data-rec-mode="keybind" role="menuitem">
+              <span class="rec-check" aria-hidden="true"></span>As separate keys
+            </button>
+          </div>
+        </div>
+        <button id="btn-run" class="btn btn-primary" title="Run / arm the macro">
+          Run
+        </button>
+        <button id="btn-stop" class="btn btn-danger" title="Stop everything (F8 works globally)">
+          Stop
+        </button>
+        <button id="btn-check-updates" class="btn btn-ghost btn-small" title="Check for a newer version of MacroBlock">
+          Check for updates
+        </button>
+      </header>
+
+      <!-- ======================= degraded features ======================= -->
+      <div id="degradations" class="degradations hidden"></div>
+
+      <main id="main">
+        <!-- ========================== sidebar ========================== -->
+        <aside id="sidebar">
+          <div class="side-head">
+            <span>My macros</span>
+            <button id="btn-new" class="icon-btn" title="New macro">＋</button>
+          </div>
+          <ul id="macro-list" class="macro-list"></ul>
+
+          <div class="side-actions">
+            <button id="btn-save" class="btn btn-small btn-primary" title="Save (Ctrl+S)">Save</button>
+            <button id="btn-shortcuts" class="btn btn-small">Shortcuts</button>
+            <button id="btn-rename" class="btn btn-small">Rename</button>
+            <button id="btn-duplicate" class="btn btn-small">Duplicate</button>
+            <button id="btn-delete" class="btn btn-small btn-danger">Delete</button>
+          </div>
+
+          <div class="side-head side-head-sub">
+            <span>Activity log</span>
+            <button id="btn-pause-log" class="icon-btn" title="Pause the activity log (entries are still captured while paused)">II</button>
+            <button id="btn-open-logs" class="icon-btn" title="Open the log folder">?</button>
+          </div>
+          <div id="log-panel" class="log-panel"></div>
+        </aside>
+
+        <!-- ========================= workspace ========================= -->
+        <section id="workspace-wrap">
+          <div id="workspace"></div>
+          <div id="record-banner" class="record-banner hidden">
+            <span class="rec-dot"></span>
+            <span>Recording… real mouse clicks, keystrokes and delays are being added as blocks.</span>
+            <button id="btn-record-stop" class="btn btn-small btn-danger">Stop recording</button>
+            <span class="hint" id="record-hotkey-hint"></span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- modal + toast hosts -->
+    <div id="modal-root" class="modal-root hidden" aria-hidden="true">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-window" id="modal-window" role="dialog" aria-modal="true"></div>
+    </div>
+    <div id="ctx-menu" class="ctx-menu hidden"></div>
+    <div id="toast-root" class="toast-root"></div>
+
+    <!-- error collector must load first so it can catch startup failures -->
+    <script src="js/errors.js"></script>
+
+    <!-- Blockly (UMD build: attaches window.Blockly) -->
+    <script src="../../node_modules/blockly/blockly.min.js"></script>
+
+    <!-- shared code (UMD: attaches window.MB.*) -->
+<script src="../shared/constants.js"></script>
+<script src="../shared/catalog.js"></script>
+<script src="../shared/buttons.js"></script>
+<script src="../shared/expressions.js"></script>
+
+    <!-- Blockly-facing code (UMD) -->
+    <script src="../blockly/fields.js"></script>
+    <script src="../blockly/blocks.js"></script>
+    <script src="../blockly/compiler.js"></script>
+
+    <!-- renderer -->
+    <script src="js/theme.js"></script>
+    <script src="js/modals.js"></script>
+    <script src="js/actions.js"></script>
+    <script src="js/marquee.js"></script>
+<script src="js/recorder.js"></script>
+<script src="js/updateBanner.js"></script>
+<script src="js/app.js"></script>
+  </body>
+</html>
+

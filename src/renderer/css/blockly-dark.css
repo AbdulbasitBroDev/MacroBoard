@@ -1,0 +1,171 @@
+/* ==========================================================================
+   MacroBlock - Blockly dark theme overrides.
+
+   The Blockly theme (js/theme.js) handles the canvas, grid and block colours;
+   this file handles the chrome Blockly renders as plain DOM, which the theme API
+   does not cover.
+   ========================================================================== */
+
+.blocklySvg {
+  background-color: transparent !important;
+}
+
+/* ---- toolbox ------------------------------------------------------------ */
+
+.blocklyToolboxDiv {
+  background-color: #12151f !important;
+  border-right: 1px solid #262b3d;
+  padding: 8px 0 24px;
+}
+
+.blocklyTreeRow {
+  height: 34px !important;
+  line-height: 34px !important;
+  padding: 0 12px 0 8px !important;
+  margin: 2px 8px !important;
+  border-radius: 7px;
+  color: #8f97ad !important;
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 550;
+  transition: background 0.12s, color 0.12s;
+}
+
+.blocklyTreeRow:hover {
+  background-color: #1c2030 !important;
+  color: #e6e9f2 !important;
+}
+
+.blocklyTreeSelected {
+  background-color: rgba(124, 92, 255, 0.16) !important;
+  color: #e6e9f2 !important;
+}
+
+/* ---- flyout ------------------------------------------------------------ */
+
+.blocklyFlyoutBackground {
+  fill: #171b28 !important;
+  fill-opacity: 0.97 !important;
+}
+
+.blocklyFlyoutScrollbar {
+  opacity: 0.4;
+}
+
+/* ---- labels + text ----------------------------------------------------- */
+
+.blocklyTreeLabel,
+.blocklyFlyoutLabelText {
+  font-family: var(--font) !important;
+  color: #8f97ad;
+}
+
+.blocklyFlyoutLabelText {
+  fill: #616b82 !important;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.blocklyText {
+  font-family: var(--font) !important;
+  font-weight: 500;
+}
+
+.blocklyHtmlInput {
+  box-sizing: border-box !important;
+  padding: 2px 4px !important;
+  border: 1px solid #5b6379 !important;
+  border-radius: 4px !important;
+  background: #1c2030 !important;
+  color: #e6e9f2 !important;
+  font-family: var(--font) !important;
+  font-size: 13px !important;
+  outline: none !important;
+}
+
+.blocklyHtmlInput:focus {
+  border-color: #9d86ff !important;
+}
+
+/* ---- zoom / trashcan / scrollbars -------------------------------------- */
+
+.blocklyZoom > image,
+.blocklyTrash > image {
+  opacity: 0.5;
+}
+.blocklyZoom > image:hover,
+.blocklyTrash > image:hover {
+  opacity: 0.9;
+}
+
+.blocklyScrollbarHandle {
+  fill: #333a52 !important;
+}
+.blocklyScrollbarHandle:hover {
+  fill: #48506e !important;
+}
+
+/* ---- right-click menu + tooltips --------------------------------------- */
+
+.blocklyContextMenu,
+.blocklyWidgetDiv .goog-menu {
+  background-color: #151824 !important;
+  border: 1px solid #333a52 !important;
+  border-radius: 7px !important;
+  box-shadow: var(--shadow) !important;
+  color: #e6e9f2 !important;
+  font-family: var(--font) !important;
+  font-size: 12.5px !important;
+  padding: 4px !important;
+}
+
+.goog-menuitem {
+  border-radius: 5px;
+  padding: 6px 10px !important;
+  color: #e6e9f2 !important;
+}
+.goog-menuitem-highlight,
+.goog-menuitem:hover {
+  background-color: #232839 !important;
+  border-color: transparent !important;
+}
+.goog-menuitem-disabled .goog-menuitem-content {
+  color: #616b82 !important;
+}
+.goog-menu {
+  background-color: #151824 !important;
+  border: 1px solid #333a52 !important;
+  border-radius: 7px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.blocklyTooltipDiv {
+  background-color: #1c2030 !important;
+  border: 1px solid #333a52 !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow) !important;
+  color: #e6e9f2 !important;
+  font-family: var(--font) !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+  padding: 9px 11px !important;
+  max-width: 380px;
+  white-space: pre-wrap !important;
+}
+
+/* ---- selection rect + delete highlight --------------------------------- */
+
+.blocklySelected > .blocklyPath {
+  stroke: #9d86ff !important;
+  stroke-width: 2px !important;
+}
+
+.blocklyDeleteHighlight > .blocklyPath {
+  fill: #ff5d6c !important;
+}
+
+/* The dark canvas is set by the theme; keep the grid subtle. */
+.blocklyMainBackground {
+  stroke: none !important;
+}

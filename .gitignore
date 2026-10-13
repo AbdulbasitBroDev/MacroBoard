@@ -1,0 +1,32 @@
+# Dependencies (445 MB here: electron alone is 368 MB)
+node_modules/
+
+# electron-builder output
+release/
+dist/
+*.blockmap
+latest*.yml
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Logs and temp
+*.log
+npm-debug.log*
+.env
+.env.local
+
+# Local scratch
+tmp/
+*.tmp
+
+# Local smoke-test / selftest artifacts
+_smoke_*.txt
+_st_*.txt
+_selftest.json
+_screenshot.png
