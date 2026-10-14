@@ -8,7 +8,7 @@ const path = require('node:path');
 const { createMacroStore } = require('../src/main/services/macroStore');
 
 test('macro shortcuts persist and invalid button ids are discarded', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'macroblock-store-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MacroBoard-store-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const store = createMacroStore({ dir });
@@ -44,7 +44,7 @@ test('macro shortcuts persist and invalid button ids are discarded', (t) => {
  * another.
  */
 test('settings persist and survive a reopen', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'macroblock-settings-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MacroBoard-settings-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const store = createMacroStore({ dir });
@@ -55,7 +55,7 @@ test('settings persist and survive a reopen', (t) => {
 });
 
 test('setSettings MERGES rather than replacing', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'macroblock-settings2-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MacroBoard-settings2-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const store = createMacroStore({ dir });
@@ -68,7 +68,7 @@ test('setSettings MERGES rather than replacing', (t) => {
 });
 
 test('changing the record mode does not disturb the other one', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'macroblock-settings3-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MacroBoard-settings3-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const store = createMacroStore({ dir });
@@ -78,7 +78,7 @@ test('changing the record mode does not disturb the other one', (t) => {
 });
 
 test('getSettings hands back a copy, so callers cannot mutate the store', (t) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'macroblock-settings4-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'MacroBoard-settings4-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const store = createMacroStore({ dir });

@@ -6,7 +6,7 @@
  * A small always-on-top, click-through window that follows the cursor and shows
  * the colour currently under it. It exists because the main window has to be
  * HIDDEN while the eyedropper runs - otherwise the user is picking a pixel of
- * MacroBlock instead of the app they care about - so there is nowhere else to
+ * MacroBoard instead of the app they care about - so there is nowhere else to
  * show the preview.
  *
  * `setIgnoreMouseEvents(true)` is the important line: the chip must never

@@ -1,10 +1,10 @@
 {
-  "name": "macroblock",
-  "productName": "MacroBlock",
+  "name": "MacroBoard",
+  "productName": "MacroBoard",
   "version": "1.0.0",
-  "description": "MacroBlock - a premium block-based (Scratch-style) macro builder for Windows",
+  "description": "MacroBoard - a premium block-based (Scratch-style) macro builder for Windows",
   "main": "src/main/main.js",
-  "author": "MacroBlock",
+  "author": "MacroBoard",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -37,8 +37,8 @@
     "jsdom": "^27.4.0"
   },
   "build": {
-    "appId": "com.macroblock.app",
-    "productName": "MacroBlock",
+    "appId": "com.MacroBoard.app",
+    "productName": "MacroBoard",
     "asar": true,
     "npmRebuild": false,
     "directories": {
@@ -51,7 +51,7 @@
     ],
     "publish": {
       "provider": "generic",
-      "url": "https://REPLACE-ME.example.com/macroblock"
+      "url": "https://REPLACE-ME.example.com/MacroBoard"
     },
     "win": {
       "target": [
@@ -70,18 +70,18 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "MacroBlock"
+      "shortcutName": "MacroBoard"
     },
     "portable": {
       "artifactName": "${productName}-${version}-portable.${ext}"
     },
     "appx": {
-      "identityName": "MacroBlock",
-      "publisher": "CN=MacroBlock",
-      "publisherDisplayName": "MacroBlock",
-      "applicationId": "MacroBlock",
+      "identityName": "MacroBoard",
+      "publisher": "CN=MacroBoard",
+      "publisherDisplayName": "MacroBoard",
+      "applicationId": "MacroBoard",
       "backgroundColor": "#141824",
-      "displayName": "MacroBlock"
+      "displayName": "MacroBoard"
     }
   }
 }

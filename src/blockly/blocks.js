@@ -1,5 +1,5 @@
 /**
- * MacroBlock - block definitions
+ * MacroBoard - block definitions
  *
  * Everything is defined with manual `Blockly.Blocks[type] = {...}` assignment
  * rather than defineBlocksWithJsonArray, because:
@@ -93,7 +93,7 @@
   }
 
   /**
-   * Define every MacroBlock block type against a Blockly instance.
+   * Define every MacroBoard block type against a Blockly instance.
    * @param {object} Blockly
    * @param {object} deps { catalog, constants, fieldClasses }
    */
@@ -314,7 +314,7 @@ this.appendDummyInput()
         this.appendDummyInput().appendField('seconds  run');
         this.appendStatementInput('DO').appendField('do');
         this.setTooltip(
-          'Runs the blocks below on a timer, again and again, while MacroBlock stays open.\n\n' +
+          'Runs the blocks below on a timer, again and again, while MacroBoard stays open.\n\n' +
             'If a run is still going when the next tick arrives, that tick is SKIPPED rather than ' +
             'queued, so a slow macro simply runs less often instead of piling up behind itself. ' +
             'The first free tick starts it again.\n\n' +
@@ -335,8 +335,8 @@ this.appendDummyInput()
         this.appendStatementInput('DO').appendField('do');
         this.setTooltip(
           'Runs the blocks below once a day, at that time on your local clock.\n\n' +
-            'This needs MacroBlock to be OPEN at that moment - it is not a Windows scheduled task, ' +
-            'so it will not wake the computer or start the app for you. If MacroBlock is closed, or ' +
+            'This needs MacroBoard to be OPEN at that moment - it is not a Windows scheduled task, ' +
+            'so it will not wake the computer or start the app for you. If MacroBoard is closed, or ' +
             'busy with another run, that day is simply skipped.'
         );
       },
@@ -423,7 +423,7 @@ this.appendDummyInput()
             'delivers a burst of events, and running the macro for each of them would flood it. It ' +
             're-arms once you stop scrolling.' +
             String.fromCharCode(10) + String.fromCharCode(10) +
-            'The wheel is global: scrolling in any window counts, including outside MacroBlock.'
+            'The wheel is global: scrolling in any window counts, including outside MacroBoard.'
         );
       },
     };
@@ -932,7 +932,7 @@ this.appendDummyInput()
             'ms; after that each check is about ' + C.WINDOW.MEASURED_QUERY_MS +
             'ms, so the interval you choose is the interval you get. The helper shuts itself down ' +
             'when unused.\n\n' +
-            'Only visible top-level windows are listed, and MacroBlock\'s own window is ignored so a ' +
+            'Only visible top-level windows are listed, and MacroBoard\'s own window is ignored so a ' +
             'macro cannot match this app and declare victory.'
         );
       },

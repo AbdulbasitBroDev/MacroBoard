@@ -1,5 +1,5 @@
 /**
- * MacroBlock - block compiler (Blockly workspace -> plain JSON step list)
+ * MacroBoard - block compiler (Blockly workspace -> plain JSON step list)
  *
  * DESIGN NOTE (important)
  * -----------------------

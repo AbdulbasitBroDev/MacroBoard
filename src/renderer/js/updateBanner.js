@@ -65,7 +65,7 @@ function render() {
   root.hidden = true;
 
   if (current.state === 'available' && current.version !== dismissedFor) {
-    textNode.textContent = 'MacroBlock ' + current.version + ' is available.';
+    textNode.textContent = 'MacroBoard ' + current.version + ' is available.';
     actions.appendChild(button('Download', 'primary', async () => {
       await api.update.download();
     }));
@@ -86,11 +86,11 @@ function render() {
 
   if (current.state === 'downloaded') {
     if (current.version === dismissedFor) return;
-    textNode.textContent = 'MacroBlock ' + current.version + ' is ready to install.';
+    textNode.textContent = 'MacroBoard ' + current.version + ' is ready to install.';
     actions.appendChild(button('Restart now', 'primary', async () => {
       const res = await api.update.install();
       if (!res || !res.starting) {
-        MB.modals.toast('Could not start the installer. Restart MacroBlock and try again.', 'error');
+        MB.modals.toast('Could not start the installer. Restart MacroBoard and try again.', 'error');
       }
     }));
     actions.appendChild(button('Later', '', () => {
@@ -116,7 +116,7 @@ async function checkNow() {
     percent: res && res.percent ? res.percent : 0,
     message: res && res.message ? res.message : '',
   };
-  if (current.state === 'up-to-date') MB.modals.toast('MacroBlock is up to date.', 'ok');
+  if (current.state === 'up-to-date') MB.modals.toast('MacroBoard is up to date.', 'ok');
   if (current.state === 'disabled') MB.modals.toast('Automatic updates only apply to the installed app.', 'warn');
   render();
   return current;

@@ -6,7 +6,7 @@
  *
  * Proves auto-update works, end to end, on this machine, with nothing published.
  *
- * The honest version of this question is "does an installed MacroBlock actually
+ * The honest version of this question is "does an installed MacroBoard actually
  * replace itself with a newer one". Detecting a version is not that; it is the
  * easy half. So this script does the whole thing:
  *
@@ -34,12 +34,12 @@ const ROOT = path.join(__dirname, '..');
 const PKG = path.join(ROOT, 'package.json');
 const RELEASE = path.join(ROOT, 'release');
 const INSTALL_DIR_CANDIDATES = [
-  path.join(process.env.LOCALAPPDATA || '', 'Programs', 'MacroBlock'),
-  path.join(process.env.ProgramFiles || 'C:\\Program Files', 'MacroBlock'),
+  path.join(process.env.LOCALAPPDATA || '', 'Programs', 'MacroBoard'),
+  path.join(process.env.ProgramFiles || 'C:\\Program Files', 'MacroBoard'),
 ];
 const PORT = Number(process.argv[2]) || 8124;
 const FEED = 'http://127.0.0.1:' + PORT;
-const LOG_DIR = path.join(process.env.APPDATA || '', 'MacroBlock', 'logs');
+const LOG_DIR = path.join(process.env.APPDATA || '', 'MacroBoard', 'logs');
 
 /**
  * Where the installer actually put things. electron-builder's default
@@ -48,7 +48,7 @@ const LOG_DIR = path.join(process.env.APPDATA || '', 'MacroBlock', 'logs');
  * LOCALAPPDATA. The script must not care which.
  */
 function findInstallDir() {
-  return INSTALL_DIR_CANDIDATES.find((d) => fs.existsSync(path.join(d, 'MacroBlock.exe'))) || null;
+  return INSTALL_DIR_CANDIDATES.find((d) => fs.existsSync(path.join(d, 'MacroBoard.exe'))) || null;
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -108,7 +108,7 @@ function fetchText(url) {
 
 function readLog() {
   try {
-    return fs.readFileSync(path.join(LOG_DIR, 'macroblock.log'), 'utf8');
+    return fs.readFileSync(path.join(LOG_DIR, 'MacroBoard.log'), 'utf8');
   } catch (e) {
     return '';
   }
@@ -133,13 +133,13 @@ function serveRelease() {
 
 function killApp() {
   spawnSync('powershell', ['-NoProfile', '-Command',
-    "Get-Process -Name MacroBlock,electron -EA SilentlyContinue | Stop-Process -Force -EA SilentlyContinue"], { encoding: 'utf8' });
+    "Get-Process -Name MacroBoard,electron -EA SilentlyContinue | Stop-Process -Force -EA SilentlyContinue"], { encoding: 'utf8' });
 }
 
 function uninstall() {
   const dir = findInstallDir();
   if (!dir) { say('no install found, nothing to uninstall'); return; }
-  const uninstaller = path.join(dir, 'Uninstall MacroBlock.exe');
+  const uninstaller = path.join(dir, 'Uninstall MacroBoard.exe');
   if (!fs.existsSync(uninstaller)) { say('no uninstaller in ' + dir); return; }
   runInstaller(uninstaller);
   say('uninstalled from ' + dir);
@@ -165,7 +165,7 @@ async function main() {
     build();
 
     next('Install v1.0.0 silently (this is the app that will update itself)');
-    const installer = path.join(RELEASE, 'MacroBlock-Setup-1.0.0.exe');
+    const installer = path.join(RELEASE, 'MacroBoard-Setup-1.0.0.exe');
     if (!fs.existsSync(installer)) throw new Error('installer missing: ' + installer);
     runInstaller(installer);
     // The installer launches the app when it finishes; that instance would
@@ -175,8 +175,8 @@ async function main() {
 
     let dir = null;
     for (let i = 0; i < 60 && !dir; i++) { dir = findInstallDir(); if (!dir) await sleep(1000); }
-    if (!dir) throw new Error('install did not produce MacroBlock.exe in ' + INSTALL_DIR_CANDIDATES.join(' or '));
-    const installedExe = path.join(dir, 'MacroBlock.exe');
+    if (!dir) throw new Error('install did not produce MacroBoard.exe in ' + INSTALL_DIR_CANDIDATES.join(' or '));
+    const installedExe = path.join(dir, 'MacroBoard.exe');
     say('installed to ' + dir);
     const v0 = fileVersion(installedExe);
     say('installed exe FileVersion = ' + v0);
@@ -197,7 +197,7 @@ async function main() {
     say('latest.yml served, advertises 1.0.1');
 
     next('Launch the INSTALLED 1.0.0 and let it update itself');
-    try { fs.unlinkSync(path.join(LOG_DIR, 'macroblock.log')); } catch (e) { /* no prior log */ }
+    try { fs.unlinkSync(path.join(LOG_DIR, 'MacroBoard.log')); } catch (e) { /* no prior log */ }
     const child = spawn(installedExe, [], { detached: true, stdio: 'ignore' });
     // Without a listener a failed spawn throws as an unhandled 'error' event and
     // kills the process instead of reaching the catch below.
@@ -226,7 +226,7 @@ async function main() {
     }
     say('installed exe FileVersion = ' + v1);
     results.push(['installed exe is now 1.0.1', v1 === '1.0.1', v1]);
-    results.push(['app relaunched after installing', /MacroBlock starting/.test(readLog()), '']);
+    results.push(['app relaunched after installing', /MacroBoard starting/.test(readLog()), '']);
 
     console.log('\n--------------------------------------------------------------');
     let allPass = true;

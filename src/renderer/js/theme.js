@@ -1,5 +1,5 @@
 /**
- * MacroBlock - Blockly theme + toolbox definition.
+ * MacroBoard - Blockly theme + toolbox definition.
  *
  * The theme API covers the canvas, grid, blocks and components. Anything the
  * theme API does not reach (toolbox DOM, tooltips, context menus, the flyout
@@ -28,8 +28,8 @@
   }
 
   function defineTheme() {
-    const theme = Blockly.Theme.defineTheme('macroblock-dark', {
-      name: 'macroblock-dark',
+    const theme = Blockly.Theme.defineTheme('MacroBoard-dark', {
+      name: 'MacroBoard-dark',
       base: Blockly.Themes.Classic,
       blockStyles: blockStyles(),
       componentStyles: {

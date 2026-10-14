@@ -1,5 +1,5 @@
 /**
- * MacroBlock - shared constants
+ * MacroBoard - shared constants
  *
  * UMD wrapper: the same file is consumed by
  *   - the Electron main process  -> require('.../shared/constants.js')

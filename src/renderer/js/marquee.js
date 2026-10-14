@@ -1,5 +1,5 @@
 /**
- * MacroBlock - marquee (rubber-band) selection + the selection context menu.
+ * MacroBoard - marquee (rubber-band) selection + the selection context menu.
  *
  * DESIGN NOTE
  * -----------

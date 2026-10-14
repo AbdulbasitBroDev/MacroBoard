@@ -1,5 +1,5 @@
 /**
- * MacroBlock - record mode.
+ * MacroBoard - record mode.
  *
  * Turns a stream of real global input events into readable blocks appended live
  * to the current workspace.

@@ -1,5 +1,5 @@
 /**
- * MacroBlock - custom Blockly fields
+ * MacroBoard - custom Blockly fields
  *
  * Three field types:
  *

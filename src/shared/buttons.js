@@ -1,5 +1,5 @@
 /**
- * MacroBlock - input button catalog
+ * MacroBoard - input button catalog
  *
  * WHY THIS MODULE EXISTS
  * ----------------------

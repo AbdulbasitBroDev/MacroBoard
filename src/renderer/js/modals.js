@@ -1,5 +1,5 @@
 /**
- * MacroBlock - modal dialogs.
+ * MacroBoard - modal dialogs.
  *
  * Contains the button picker (US keyboard grid + mouse buttons + "listen for a
  * press"), the colour picker (palette + hex + screen eyedropper), and the small
@@ -432,7 +432,7 @@
       const keyboard = el('div', 'shortcut-keyboard');
       frag.appendChild(keyboard);
 
-      const note = el('div', 'modal-note', 'Global keyboard chords work while MacroBlock is in the background.');
+      const note = el('div', 'modal-note', 'Global keyboard chords work while MacroBoard is in the background.');
       frag.appendChild(note);
 
       const cancelButton = el('button', 'btn', 'Cancel');

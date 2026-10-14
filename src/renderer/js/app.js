@@ -1,5 +1,5 @@
 /**
- * MacroBlock - renderer bootstrap and UI wiring.
+ * MacroBoard - renderer bootstrap and UI wiring.
  *
  * Responsibilities:
  *   - inject Blockly with the dark theme + custom toolbox
@@ -833,7 +833,7 @@ function recompile(opts) {
         );
       });
     const body = [
-      'MacroBlock',
+      'MacroBoard',
       '  electron      ' + (state.boot.app.electron || '?'),
       '  node          ' + (state.boot.app.node || '?'),
       '  data dir      ' + (state.boot.store.dir || '?'),
@@ -944,7 +944,7 @@ function recompile(opts) {
     const boot = await api.bootstrap();
     if (!boot || !boot.ok) {
       dom.statusText.textContent = 'Failed to start';
-      modals.toast('MacroBlock could not start: ' + ((boot && boot.reason) || 'unknown error'), 'error', 60000);
+      modals.toast('MacroBoard could not start: ' + ((boot && boot.reason) || 'unknown error'), 'error', 60000);
       return;
     }
     state.boot = boot;
@@ -1019,7 +1019,7 @@ function recompile(opts) {
     api.onLog((entry) => pushLog(entry.level, entry.message));
     api.onError((err) => modals.toast(err.message, 'error'));
 
-    log('info', 'MacroBlock ready');
+    log('info', 'MacroBoard ready');
     if (boot.degradations) {
       Object.keys(boot.degradations).forEach((k) => {
         if (boot.degradations[k]) log('warn', boot.degradations[k]);

@@ -1,5 +1,5 @@
 /**
- * MacroBlock - block catalog
+ * MacroBoard - block catalog
  *
  * The single source of truth for every block type id used by
  *   - the block definitions     (src/blockly/blocks.js)

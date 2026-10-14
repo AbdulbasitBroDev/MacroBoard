@@ -1,4 +1,4 @@
-# MacroBlock — Feature Implementation Prompt
+# MacroBoard — Feature Implementation Prompt
 
 Paste the contents of this file into a fresh opencode session to resume this work.
 
@@ -6,8 +6,8 @@ Paste the contents of this file into a fresh opencode session to resume this wor
 
 ## Context
 
-We are adding 23 features to **MacroBlock**, an existing Windows desktop macro builder at
-`C:\Users\abdul\Desktop\ForStudy\ForStudy\MacroBlocks`.
+We are adding 23 features to **MacroBoard**, an existing Windows desktop macro builder at
+`C:\Users\abdul\Desktop\ForStudy\ForStudy\MacroBoards`.
 
 Read `README.md` first — it is the de-facto spec. Then read `src/shared/constants.js`,
 `src/shared/catalog.js`, `src/blockly/blocks.js`, `src/blockly/compiler.js`,
@@ -19,7 +19,7 @@ Read `README.md` first — it is the de-facto spec. Then read `src/shared/consta
 Electron + Blockly. Users drag-and-drop blocks to build a macro. The workspace compiles to a
 plain JSON step list. The main process interprets that step list using three native services:
 `inputService` (nut-js simulate), `hookService` (uiohook global detect), `pixelService`
-(desktopCapturer pixel reads). Macros persist as JSON in `%APPDATA%\MacroBlock\`.
+(desktopCapturer pixel reads). Macros persist as JSON in `%APPDATA%\MacroBoard\`.
 
 There is **no build step**. Shared files under `src/shared/` and `src/blockly/` are UMD modules
 usable from `require()` (main), `<script>` (renderer) and `require()` (test). Follow that pattern
@@ -350,7 +350,7 @@ options block at `app.js:580-602` is the reference for how options are set here.
 
 **#32 — export / import macro (0 new blocks)**
 Export a macro to a `.json` file and import it back. Right now macros are trapped in
-`%APPDATA%\MacroBlock\macros.json` with no way to share them. Add IPC for read/write via a file
+`%APPDATA%\MacroBoard\macros.json` with no way to share them. Add IPC for read/write via a file
 dialog. Imported macros must be validated — same care as loading `macros.json`, see
 `macroStore.js:40-67` which already degrades corrupt files to defaults.
 

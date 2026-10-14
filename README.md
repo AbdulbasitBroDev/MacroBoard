@@ -1,14 +1,14 @@
-# MacroBlock
+# MacroBoard
 
 A premium, block-based (Scratch-style) macro builder for Windows, built with **Electron + Blockly**.
 
-MacroBlock watches for real keyboard/mouse input and replays macros by simulating that input for
+MacroBoard watches for real keyboard/mouse input and replays macros by simulating that input for
 you. It is a desktop app, not a script runner: everything lives in a dark, drag-and-drop Blockly
 workspace and runs from the main process against native Windows APIs.
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│ ● MacroBlock  [● Idle]  START when Run is pressed  0 steps   │  ← status pill, Run/Arm, Stop (F8)
+│ ● MacroBoard  [● Idle]  START when Run is pressed  0 steps   │  ← status pill, Run/Arm, Stop (F8)
 │                                        [● Record] [Run] [Stop]│
 ├──────────────┬──────────────────────────────────────────────┤
 │ My macros    │        ▶ when Run is pressed                 │
@@ -71,7 +71,7 @@ npm.cmd run verify
 
 checks all three native dependencies and prints exactly what breaks - without failing the install.
 
-MacroBlock is deliberately written so a broken native module **never stops the app from starting**.
+MacroBoard is deliberately written so a broken native module **never stops the app from starting**.
 Every service loads inside `try/catch`, reports why it is unavailable, and the UI shows an amber bar
 naming the disabled features. You can always open the app, edit macros, and run `npm.cmd test`.
 
@@ -105,20 +105,20 @@ Output lands in `release/`:
 
 | File | Size | What it is |
 | --- | --- | --- |
-| `MacroBlock-Setup-1.0.0.exe` | **102 MB** | NSIS installer. Install wizard, Start Menu + desktop shortcut, proper uninstall entry in Apps & Features |
-| `MacroBlock-1.0.0-portable.exe` | **102 MB** | Single file, no install, runs from a USB stick |
+| `MacroBoard-Setup-1.0.0.exe` | **102 MB** | NSIS installer. Install wizard, Start Menu + desktop shortcut, proper uninstall entry in Apps & Features |
+| `MacroBoard-1.0.0-portable.exe` | **102 MB** | Single file, no install, runs from a USB stick |
 
 The recipient double-clicks and runs it. No Node, no `npm start`, no terminal.
 
 ### Why the build is ~100 MB and not ~450 MB
 
-The repo folder is 446 MB, but almost none of that is MacroBlock:
+The repo folder is 446 MB, but almost none of that is MacroBoard:
 
 | | Repo | Shipped |
 | --- | --- | --- |
 | `src/` (your code) | 0.4 MB | 0.4 MB |
 | `node_modules/` | 445 MB | ~20 MB, inside `app.asar` |
-| Electron runtime | 368 MB | 235 MB (`MacroBlock.exe`) |
+| Electron runtime | 368 MB | 235 MB (`MacroBoard.exe`) |
 
 Three things shrink it, all configured in the `build` block of `package.json`:
 
@@ -127,7 +127,7 @@ Three things shrink it, all configured in the `build` block of `package.json`:
   dependencies (`jsdom`, `electron`) are excluded.
 - **NSIS compression** - LZMA over the Chromium binary.
 
-The floor is `MacroBlock.exe` at 235 MB. That is Chromium plus Node, which every
+The floor is `MacroBoard.exe` at 235 MB. That is Chromium plus Node, which every
 Electron app carries; there is no way to avoid it short of not using Electron.
 
 ### Two deliberate build settings
@@ -177,7 +177,7 @@ network.
 What to check after downloading:
 
 - Windows shows **"Windows protected your PC"** -> **More info -> Run anyway**
-- `Get-Item "$env:USERPROFILE\Downloads\MacroBlock-Setup-1.0.0.exe" -Stream *`
+- `Get-Item "$env:USERPROFILE\Downloads\MacroBoard-Setup-1.0.0.exe" -Stream *`
   shows a `Zone.Identifier` stream, confirming the file really was downloaded
 - The install wizard runs, shortcuts appear, uninstall works
 - Compare the downloaded SHA-256 against the one on the page
@@ -196,7 +196,7 @@ in the top bar.
 `package.json` is a placeholder:
 
 ```json
-"publish": { "provider": "generic", "url": "https://REPLACE-ME.example.com/macroblock" }
+"publish": { "provider": "generic", "url": "https://REPLACE-ME.example.com/MacroBoard" }
 ```
 
 Until that points at a real host, every check logs `ERR_NAME_NOT_RESOLVED` and
@@ -212,8 +212,8 @@ To switch it on:
    | File | Needed for |
    | --- | --- |
    | `latest.yml` | tells the app what version exists |
-   | `MacroBlock-Setup-1.0.0.exe` | the installer to download |
-   | `MacroBlock-Setup-1.0.0.exe.blockmap` | differential download |
+   | `MacroBoard-Setup-1.0.0.exe` | the installer to download |
+   | `MacroBoard-Setup-1.0.0.exe.blockmap` | differential download |
 
    `npm.cmd run dist:publish` builds and uploads in one step once the host is
    configured. Plain `npm.cmd run dist` only writes them to `release/`.
@@ -255,7 +255,7 @@ INFO update: checking
 INFO update: available 1.0.1
 ```
 
-and a bar appears bottom-left: *"MacroBlock 1.0.1 is available"* with **Download**
+and a bar appears bottom-left: *"MacroBoard 1.0.1 is available"* with **Download**
 and **Later**.
 
 Verified working this way: `checking` -> `available 1.0.1`, the banner rendering,
@@ -441,7 +441,7 @@ Two consequences worth knowing:
 
 - **A macro slower than its interval runs less often**, not faster. Nothing ever
   waits behind a running macro.
-- **They need MacroBlock to be open.** `at 09:00` is not a Windows scheduled
+- **They need MacroBoard to be open.** `at 09:00` is not a Windows scheduled
   task: it will not wake the machine, start the app, or run while the app is
   closed. A missed day is skipped, not made up.
 
@@ -598,8 +598,8 @@ Consequences you can see:
 
 #### What is listed
 
-Visible top-level windows only, and **MacroBlock's own window is excluded** - otherwise
-`wait until window titled "MacroBlock"` would match this app and the macro would run before it had
+Visible top-level windows only, and **MacroBoard's own window is excluded** - otherwise
+`wait until window titled "MacroBoard"` would match this app and the macro would run before it had
 done anything. Minimised windows still count: they are visible in the sense that matters here.
 
 #### Honest limits
@@ -871,7 +871,7 @@ page - a bug caught by a test that counts occurrences of a string in the saved J
 ### Mouse & keyboard blocks
 
 - `click [button] at x,y` / `move mouse to x,y` - both have a **⛶ pick** control: clicking it
-  minimizes MacroBlock, arms a one-shot global mousedown listener, captures the real coordinates of
+  minimizes MacroBoard, arms a one-shot global mousedown listener, captures the real coordinates of
   your next click, restores the window and fills in x,y.
 - `move mouse by dx,dy within N ms` - smooth relative move, interpolated over exactly N ms. No picker
   (it is relative, not absolute). `nut-js`'s own `mouse.move` is paced by `mouseSpeed`/`autoDelay`,
@@ -930,7 +930,7 @@ captured the screen - so it photographed whatever the click had just caused. A m
 had navigated, a row had highlighted, and the colour you got back was frequently the reaction rather
 than the target. There is no click in the sampling path now, so nothing can change underneath it.
 
-**Why Ctrl is required.** MacroBlock **cannot block mouse buttons** - the low-level hook addon
+**Why Ctrl is required.** MacroBoard **cannot block mouse buttons** - the low-level hook addon
 swallows keyboard events only, so a click is always delivered to the app underneath. Requiring a
 modifier is what makes the commit a deliberate act instead of an accident. If picking a pixel must
 have **zero** effect on the app you are sampling, use **Ctrl+Enter**, which involves no click at all.
@@ -963,7 +963,7 @@ selected ancestor are skipped.
 ### Saved macros
 
 Sidebar: **New / Save / Rename / Duplicate / Delete**, plus click-to-open. Each macro is stored in
-`%APPDATA%\MacroBlock\macros.json` with **both** the Blockly workspace state (so it re-opens for
+`%APPDATA%\MacroBoard\macros.json` with **both** the Blockly workspace state (so it re-opens for
 editing) **and** the compiled step list (so execution and `run another macro` never re-parse blocks).
 Renaming warns that callers by the old name will report it. Writes are temp-file + rename, and a
 corrupt file degrades to "no macros" with a logged error rather than a crash.
@@ -983,7 +983,7 @@ and appended live under the start block:
 - clicks with an unmappable button are **skipped with a visible warning**.
 
 Stop with the toolbar button, the Record button again, your configured hotkey, or **Escape**/**F8**.
-Record settings live in `%APPDATA%\MacroBlock\state.json`.
+Record settings live in `%APPDATA%\MacroBoard\state.json`.
 
 > These thresholds are judgement calls, not physics. If recorded macros feel wrong, the two knobs to
 > change are `MIN_RECORDED_GAP_MS` and `TEXT_IDLE_MS` at the top of
@@ -1043,7 +1043,7 @@ Run `npm.cmd test`. Everything OS-specific is mocked, so the pure logic is genui
 
 ### Verified manually, in the real Electron window
 
-- The app launches, creates its window, and reaches `MacroBlock ready` (`npm.cmd run smoke` writes
+- The app launches, creates its window, and reaches `MacroBoard ready` (`npm.cmd run smoke` writes
 `_screenshot.png`; the rendered UI was inspected: dark theme, hat-shaped start block, all six
    toolbox categories, status pill, sidebar, activity log).
 - All three native modules load on this machine: `@fainthit/uiohook-napi-suppress` (N-API prebuild, no rebuild needed),
@@ -1063,7 +1063,7 @@ blocks plus the numeric shadows that come with them.
 
 These were checked by building and running, not by reading code:
 
-- **The packaged app launches and opens its window** (`release\win-unpacked\MacroBlock.exe`,
+- **The packaged app launches and opens its window** (`release\win-unpacked\MacroBoard.exe`,
   5 processes, titled window), and it resolves Blockly and both prebuilt native
   modules out of the built `app.asar`.
 - **The update path runs end to end and fails safely.** With the placeholder
@@ -1084,7 +1084,7 @@ These were checked by building and running, not by reading code:
   (`200 / 200 / 404 / 404 / 200`) with the server surviving all of them, path
   traversal refused, and a full 102.1 MB download that came back byte-identical.
 - **The app is confirmed unsigned** - `Get-AuthenticodeSignature` reports
-  `NotSigned` on the installer, the portable build and `MacroBlock.exe`.
+  `NotSigned` on the installer, the portable build and `MacroBoard.exe`.
 - **A ReferenceError shipped in the first build of this feature.** `devFeedUrl`
   was declared inside `buildServices()` but read by the startup timer outside it,
   so the update check silently never ran in a packaged build. The smoke run's log
@@ -1155,7 +1155,7 @@ says so when you arm it.
 
 **Several rounds of "here's the error I got" are expected and normal here** - that is a property of
 an app built on OS-level input APIs, not a sign anything went wrong. The activity log panel (bottom
-left) and `%APPDATA%\MacroBlock\logs\macroblock.log` record everything, and clicking the status pill
+left) and `%APPDATA%\MacroBoard\logs\MacroBoard.log` record everything, and clicking the status pill
 gives you a diagnostics dump to paste back.
 
 ---
@@ -1189,10 +1189,10 @@ gives you a diagnostics dump to paste back.
 Where things live:
 
 ```text
-%APPDATA%\MacroBlock\
+%APPDATA%\MacroBoard\
   macros.json        saved macros (workspace state + compiled steps)
   state.json         organized-chooser cursors, record hotkey, settings
-  logs\macroblock.log  everything, including renderer logs
+  logs\MacroBoard.log  everything, including renderer logs
 ```
 
 ---
@@ -1227,11 +1227,11 @@ Where things live:
   that would make arithmetic worth having.
 - **No `while`, and no nested `repeat until` inside an `if`-driven loop.** `repeat until` exists, but a
   loop whose exit condition is computed rather than counted is still not expressible.
-- **The timed triggers need MacroBlock open.** `at 09:00` is not a Windows scheduled task: it will not wake
+- **The timed triggers need MacroBoard open.** `at 09:00` is not a Windows scheduled task: it will not wake
   the machine, start the app, or catch up a missed day. There is deliberately no queue mode, so a macro slower
   than its interval runs less often rather than accumulating a backlog.
 - **A hard kill can poison the next launch.** If the app is force-killed or loses power, Chromium's
-  disk cache under `%APPDATA%\macroblock` can be left locked, and the next launch dies immediately
+  disk cache under `%APPDATA%\MacroBoard` can be left locked, and the next launch dies immediately
   with `Unable to move the cache: Access is denied` / `Unable to create cache` on stderr. Deleting
   that folder fixes it. Only affects the *packaged* app, where the user has no console to read the
   error - worth a friendly "startup failed, reset app data" path eventually.

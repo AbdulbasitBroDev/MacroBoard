@@ -1,5 +1,5 @@
 /**
- * MacroBlock - shared expression evaluator
+ * MacroBoard - shared expression evaluator
  *
  * The single evaluator behind every Logic block. It exists because the same
  * expression has to produce the same answer in three places:

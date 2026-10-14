@@ -49,7 +49,7 @@ function createInputService(deps) {
   const reason = available
     ? ''
     : 'Input simulation is unavailable: ' + (loadError ? loadError.message : 'unknown error') +
-      '. MacroBlock can still compile and validate macros, but cannot press keys or move the mouse.';
+      '. MacroBoard can still compile and validate macros, but cannot press keys or move the mouse.';
 
   if (available) {
     try {

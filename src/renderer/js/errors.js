@@ -1,10 +1,10 @@
 /**
- * MacroBlock - renderer error collector.
+ * MacroBoard - renderer error collector.
  *
  * Loaded FIRST, before Blockly, so it can capture anything that blows up during
  * startup and toolbox inflation. Errors are kept in `window.__mbErrors` (read by
  * the --selftest harness and the diagnostics panel) and forwarded to the main
- * process log so they end up in macroblock.log too.
+ * process log so they end up in MacroBoard.log too.
  *
  * This exists because "clicking a category does nothing" has several possible
  * causes and none of them are visible without the real exception text.

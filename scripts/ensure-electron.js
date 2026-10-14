@@ -33,7 +33,7 @@ const pathTxt = path.join(electronDir, 'path.txt');
 const EXE = process.platform === 'win32' ? 'electron.exe' : 'electron';
 
 function log(msg) {
-  console.log('[MacroBlock] ' + msg);
+  console.log('[MacroBoard] ' + msg);
 }
 
 function installed() {

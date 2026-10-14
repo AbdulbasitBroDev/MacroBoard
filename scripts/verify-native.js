@@ -3,7 +3,7 @@
  * verify-native.js
  *
  * Runs after `npm install` to tell the user *up front* whether the native
- * pieces of MacroBlock actually loaded in this environment. Native-binding
+ * pieces of MacroBoard actually loaded in this environment. Native-binding
  * failures are the single most common install problem for this app, so we
  * report them loudly and clearly instead of letting them surface as a
  * mysterious crash on first launch.
@@ -60,7 +60,7 @@ const checks = [
   },
 ];
 
-console.log('\n[MacroBlock] Verifying native / runtime dependencies...\n');
+console.log('\n[MacroBoard] Verifying native / runtime dependencies...\n');
 
 let fatal = 0;
 let degraded = 0;
@@ -90,7 +90,7 @@ if (fatal > 0) {
 } else if (degraded > 0) {
   console.log(
     'Install completed in REDUCED FUNCTIONALITY mode.\n' +
-      'MacroBlock will still launch. The main process catches these failures\n' +
+      'MacroBoard will still launch. The main process catches these failures\n' +
       'individually, so any feature that depends on a missing binding is\n' +
       'disabled at runtime and its blocks report a clear error instead of\n' +
       'crashing the app.'

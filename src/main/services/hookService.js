@@ -9,7 +9,7 @@
  * mode and the global Stop hotkey) therefore goes through libuiohook instead.
  *
  * The hook is REF-COUNTED: it only runs while something actually needs it, so
- * MacroBlock is not silently watching every keystroke while sitting idle.
+ * MacroBoard is not silently watching every keystroke while sitting idle.
  *
  * Failure policy: if the native module will not load, `available` is false, every
  * consumer checks it, and the UI explains which features are off. The app still
@@ -340,7 +340,7 @@ function createHookService(deps) {
       if (!available) return 'The input detection module did not load.';
       if (buttons.isMouseId(buttonId)) return mouseBlockReason(buttonId);
       return buttons.codeOf(buttonId) === null
-        ? 'This machine reported that input as a code MacroBlock does not recognise.'
+        ? 'This machine reported that input as a code MacroBoard does not recognise.'
         : null;
     },
 

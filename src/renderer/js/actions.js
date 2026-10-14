@@ -1,5 +1,5 @@
 /**
- * MacroBlock - UI action handlers for the custom field "pills".
+ * MacroBoard - UI action handlers for the custom field "pills".
  *
  * The Blockly fields (src/blockly/fields.js) cannot touch the DOM or IPC
  * themselves - they stay headless-safe - so they call through this port:

@@ -123,7 +123,7 @@ test('an empty needle never matches', () => {
 });
 
 test('our own windows are excluded, so a macro cannot match this app', async () => {
-  // Otherwise `wait until window titled "MacroBlock"` would succeed instantly
+  // Otherwise `wait until window titled "MacroBoard"` would succeed instantly
   // against this very app, and the macro would run before it had done anything.
   // Started by hand rather than via `started()`, because that helper already
   // has a query in flight and a reply would answer the wrong one.
@@ -132,9 +132,9 @@ test('our own windows are excluded, so a macro cannot match this app', async () 
   await tick();
   h.child.say('READY');
   await tick();
-  h.child.reply([W('MacroBlock', 999), W('Notepad', 5), W('MacroBlock', 7)]);
+  h.child.reply([W('MacroBoard', 999), W('Notepad', 5), W('MacroBoard', 7)]);
   const list = await p;
-  assert.deepStrictEqual(list.map((w) => w.title), ['Notepad', 'MacroBlock'], 'only OUR window is dropped');
+  assert.deepStrictEqual(list.map((w) => w.title), ['Notepad', 'MacroBoard'], 'only OUR window is dropped');
   assert.strictEqual(list.some((w) => w.pid === 999), false);
   h.svc.shutdown();
 });

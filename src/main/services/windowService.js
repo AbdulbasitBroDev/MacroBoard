@@ -33,7 +33,7 @@
  * visible in the sense that mattering here.
  *
  * The service's own process is EXCLUDED, so a macro waiting for a window cannot
- * match MacroBlock's own window and declare victory immediately.
+ * match MacroBoard's own window and declare victory immediately.
  */
 
 const { spawn: nodeSpawn } = require('child_process');

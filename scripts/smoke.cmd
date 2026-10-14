@@ -1,5 +1,5 @@
 @echo off
-REM Smoke test: launch MacroBlock in --smoke mode (it screenshots the UI then
+REM Smoke test: launch MacroBoard in --smoke mode (it screenshots the UI then
 REM quits), and record whether the process was still alive mid-run.
 cd /d "%~dp0.."
 del /q _smoke_out.txt _smoke_err.txt _smoke_alive.txt _screenshot.png 2>nul

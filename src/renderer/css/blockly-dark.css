@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MacroBlock - Blockly dark theme overrides.
+   MacroBoard - Blockly dark theme overrides.
 
    The Blockly theme (js/theme.js) handles the canvas, grid and block colours;
    this file handles the chrome Blockly renders as plain DOM, which the theme API

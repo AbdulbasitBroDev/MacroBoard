@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * MacroBlock - Electron main process.
+ * MacroBoard - Electron main process.
  *
  * Responsibilities:
  *   - create the window
@@ -45,11 +45,35 @@ const SELFTEST = process.argv.indexOf('--selftest') !== -1;
 
 // ------------------------------------------------------------------ logging
 
+// ------------------------------------------------- appData dir migration
+
+/**
+ * Electron derives `userData` from the product name, so the MacroBlock ->
+ * MacroBoard rename moved this app's data directory out from under anyone who
+ * already ran the old build. Copy the old directory across once, then leave it
+ * alone. Failures are silent on purpose: a user who never had the old version
+ * has nothing to migrate, and that is not an error worth showing anyone.
+ */
+function migrateUserData() {
+  const current = app.getPath('userData');
+  const legacy = path.join(path.dirname(current), 'MacroBlock');
+  try {
+    if (fs.existsSync(legacy) && !fs.existsSync(current)) {
+      fs.cpSync(legacy, current, { recursive: true });
+    }
+  } catch (err) {
+    /* never block startup on a migration */
+  }
+}
+
+// -------------------------------------------------------------- logging
+
 function initLogging() {
+  migrateUserData();
   const dir = path.join(app.getPath('userData'), 'logs');
   try {
     fs.mkdirSync(dir, { recursive: true });
-    logFile = path.join(dir, 'macroblock.log');
+    logFile = path.join(dir, 'MacroBoard.log');
   } catch (err) {
     logFile = null;
   }
@@ -221,7 +245,7 @@ function createWindow() {
     minWidth: 980,
     minHeight: 640,
     backgroundColor: constants.COLOURS.background,
-    title: 'MacroBlock',
+    title: 'MacroBoard',
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
@@ -327,7 +351,7 @@ function registerIpc(services) {
   handle('mb:bootstrap', async () => ({
     ok: true,
     app: {
-      name: 'MacroBlock',
+      name: 'MacroBoard',
       version: app.getVersion(),
       electron: process.versions.electron,
       chrome: process.versions.chrome,
@@ -589,7 +613,7 @@ function registerIpc(services) {
 
 // ------------------------------------------------------------- lifecycle
 
-// A second copy of MacroBlock would fight over the global hook and the same
+// A second copy of MacroBoard would fight over the global hook and the same
 // macro file, so only one instance is allowed.
 if (!app.requestSingleInstanceLock()) {
   app.quit();
@@ -603,7 +627,7 @@ if (!app.requestSingleInstanceLock()) {
 
   app.whenReady().then(() => {
     initLogging();
-    log('info', 'MacroBlock starting', {
+    log('info', 'MacroBoard starting', {
       electron: process.versions.electron,
       node: process.versions.node,
       userData: app.getPath('userData'),

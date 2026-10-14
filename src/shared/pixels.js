@@ -1,5 +1,5 @@
 /**
- * MacroBlock - shared pixel colour matching
+ * MacroBoard - shared pixel colour matching
  *
  * ONE colour comparison, used by three callers that must agree exactly:
  *

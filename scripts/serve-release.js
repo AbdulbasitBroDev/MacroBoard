@@ -60,7 +60,7 @@ function listing(entries, hashes) {
 
   return `<!doctype html>
 <meta charset="utf-8">
-<title>MacroBlock downloads (local test)</title>
+<title>MacroBoard downloads (local test)</title>
 <style>
   body { font: 15px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; color: #222; }
   h1 { font-size: 1.4rem; }
@@ -70,7 +70,7 @@ function listing(entries, hashes) {
   .sum code { font-size: .7rem; word-break: break-all; color: #555; }
   .warn { background: #fff6e0; border-left: 4px solid #e8a33d; padding: .8rem; margin: 1.2rem 0; }
 </style>
-<h1>MacroBlock downloads <small>(local test server)</small></h1>
+<h1>MacroBoard downloads <small>(local test server)</small></h1>
 <div class="warn">
   Download one of these with the <strong>browser</strong>, then run it.
   Do not open the file straight off disk - only a downloaded copy carries the

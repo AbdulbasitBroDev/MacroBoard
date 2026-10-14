@@ -3,7 +3,7 @@
 /**
  * updateService
  *
- * Checks for a newer MacroBlock and reports progress to the UI.
+ * Checks for a newer MacroBoard and reports progress to the UI.
  *
  * Design rules, in priority order:
  *
