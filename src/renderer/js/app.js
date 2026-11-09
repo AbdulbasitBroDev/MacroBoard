@@ -34,6 +34,8 @@
     btnStop: document.getElementById('btn-stop'),
     btnRecord: document.getElementById('btn-record'),
     recMenu: document.getElementById('rec-menu'),
+    chkBackgroundMode: document.getElementById('chk-background-mode'),
+    bgMenu: document.getElementById('bg-menu'),
     btnRecordStop: document.getElementById('btn-record-stop'),
     recordBanner: document.getElementById('record-banner'),
     recordHotkeyHint: document.getElementById('record-hotkey-hint'),
@@ -68,6 +70,7 @@
     recordCountdown: null,
     lastTouchedStartId: null,
     autoSaveTimer: null,
+    showTrayIcon: true,
   };
 
   function log(level, message, meta) {
@@ -638,16 +641,113 @@ function recompile(opts) {
     });
   }
 
-  /** Load the remembered record mode before the user can press Record. */
-  async function loadRecordMode() {
+  /**
+   * "Background mode" is a persisted preference: it decides whether the window's
+   * close button hides the app (macros keep working) or actually quits. The main
+   * process reads the same setting, so all the UI has to do is store it.
+   */
+  async function setBackgroundMode(on) {
+    try {
+      await api.settings.set({ backgroundMode: Boolean(on) });
+    } catch (err) {
+      MB.log('warn', 'could not save background mode: ' + (err && err.message));
+    }
+  }
+
+  /**
+   * The tray icon is a second, independent preference. Only meaningful while
+   * background mode is on: without a tray icon the only way back to a hidden
+   * window is to launch the app again (which shows the existing instance).
+   */
+  async function setTrayIcon(on) {
+    state.showTrayIcon = Boolean(on);
+    renderBackgroundMenu();
+    setBackgroundMenuOpen(false);
+    try {
+      await api.settings.set({ showTrayIcon: Boolean(on) });
+    } catch (err) {
+      MB.log('warn', 'could not save the tray icon preference: ' + (err && err.message));
+    }
+  }
+
+  function setBackgroundMenuOpen(open) {
+    if (dom.bgMenu) dom.bgMenu.classList.toggle('hidden', !open);
+  }
+
+  function renderBackgroundMenu() {
+    if (!dom.bgMenu) return;
+    Array.prototype.forEach.call(dom.bgMenu.querySelectorAll('[data-tray-icon]'), (b) => {
+      const wantsIcon = b.getAttribute('data-tray-icon') === 'on';
+      const on = wantsIcon === Boolean(state.showTrayIcon);
+      b.setAttribute('aria-checked', on ? 'true' : 'false');
+      b.querySelector('.rec-check').textContent = on ? '✓' : '';
+    });
+  }
+
+  /**
+   * Mirrors the Record button's hover menu: hovering the toggle reveals the two
+   * mutually exclusive tray options, and the toggle itself still works as a
+   * plain checkbox. Opening on hover only keeps those two gestures from
+   * fighting over the same click.
+   */
+  function wireBackgroundMenu() {
+    if (!dom.chkBackgroundMode || !dom.bgMenu) return;
+    const wrap = dom.chkBackgroundMode.closest('.bg-wrap');
+    let hideTimer = null;
+
+    const openSoon = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      setBackgroundMenuOpen(true);
+    };
+    const closeSoon = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => setBackgroundMenuOpen(false), 180);
+    };
+
+    wrap.addEventListener('mouseenter', openSoon);
+    wrap.addEventListener('mouseleave', closeSoon);
+    dom.bgMenu.addEventListener('mouseenter', openSoon);
+    dom.bgMenu.addEventListener('mouseleave', closeSoon);
+
+    dom.bgMenu.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('[data-tray-icon]');
+      if (btn) setTrayIcon(btn.getAttribute('data-tray-icon') === 'on');
+    });
+
+    dom.chkBackgroundMode.addEventListener('change', () => {
+      const on = dom.chkBackgroundMode.checked;
+      setBackgroundMode(on);
+      log('info', on
+        ? 'Background mode: on - closing the window keeps macros running'
+        : 'Background mode: off - closing the window quits and stops all macros');
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') setBackgroundMenuOpen(false);
+    });
+    document.addEventListener('click', (ev) => {
+      if (!dom.bgMenu.classList.contains('hidden') && !wrap.contains(ev.target)) {
+        setBackgroundMenuOpen(false);
+      }
+    });
+  }
+
+  /** Load the remembered record mode and preferences before the UI is usable. */
+  async function loadSettings() {
+    let settings = {};
     try {
       const res = await api.settings.get();
-      const saved = res && res.settings ? res.settings.recordMode : null;
-      if (saved) MB.recorder.setMode(saved);
+      settings = (res && res.settings) || {};
     } catch (err) {
       MB.log('warn', 'could not read settings: ' + (err && err.message));
     }
+    if (settings.recordMode) MB.recorder.setMode(settings.recordMode);
+    // Both default to ON: a fresh profile keeps working after the window closes
+    // and shows a tray icon.
+    if (dom.chkBackgroundMode) dom.chkBackgroundMode.checked = settings.backgroundMode !== false;
+    state.showTrayIcon = settings.showTrayIcon !== false;
     renderRecordMode();
+    renderBackgroundMenu();
   }
 
   /**
@@ -887,6 +987,7 @@ function recompile(opts) {
     dom.btnStop.addEventListener('click', onStopClicked);
     dom.btnRecord.addEventListener('click', toggleRecording);
     wireRecordMenu();
+    wireBackgroundMenu();
     dom.btnRecord.addEventListener('dblclick', setRecordHotkey);
     dom.btnRecordStop.addEventListener('click', () => MB.recorder.stop());
     dom.btnNew.addEventListener('click', newMacro);
@@ -952,7 +1053,7 @@ function recompile(opts) {
 
     // Before Record can be pressed, so the first recording already uses the
     // remembered mode instead of silently falling back to the default.
-    await loadRecordMode();
+    await loadSettings();
 
     const buttonData = await api.bootstrapButtons();
     if (buttonData && buttonData.ok) {

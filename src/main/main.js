@@ -13,7 +13,17 @@
 
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, ipcMain, screen, desktopCapturer, nativeImage, shell } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  screen,
+  desktopCapturer,
+  nativeImage,
+  shell,
+  Tray,
+  Menu,
+} = require('electron');
 
 const constants = require('../shared/constants');
 const catalog = require('../shared/catalog');
@@ -37,6 +47,11 @@ let updateFeedUrl = null;
 let eyedropperSession = null;
 let store = null;
 let logFile = null;
+let tray = null;
+// True once the app is genuinely shutting down. The window's `close` handler
+// checks it, so "hide to the tray" cannot swallow a real quit.
+let isQuitting = false;
+let trayBalloonShown = false;
 
 /** --smoke runs a scripted self-check (screenshot + quit) and exits. */
 const SMOKE = process.argv.indexOf('--smoke') !== -1;
@@ -238,6 +253,100 @@ function buildServices() {
   return { input, hook, pixel, window, buttons, updater };
 }
 
+// ------------------------------------------------------- tray / background
+
+/**
+ * "Background mode" decides what the window's close button does: with it on the
+ * window only hides and the process - plus every armed macro - keeps running;
+ * with it off closing quits and disarms everything.
+ *
+ * It defaults to ON, so a fresh install keeps working after the window is
+ * closed. The tray-icon preference is separate: it only controls whether a tray
+ * icon is created at all.
+ */
+function backgroundModeEnabled() {
+  try {
+    const settings = (store && store.getSettings()) || {};
+    return settings.backgroundMode !== false;
+  } catch (err) {
+    return true;
+  }
+}
+
+/**
+ * A tray icon only makes sense while background mode is on: with it off the
+ * window closes for good, so there would be nothing for the icon to bring back.
+ */
+function trayIconEnabled() {
+  try {
+    const settings = (store && store.getSettings()) || {};
+    return backgroundModeEnabled() && settings.showTrayIcon !== false;
+  } catch (err) {
+    return true;
+  }
+}
+
+/** Create or destroy the tray icon to match the current preference. */
+function syncTray() {
+  if (trayIconEnabled()) {
+    createTray();
+    return;
+  }
+  if (tray) {
+    tray.destroy();
+    tray = null;
+    log('info', 'tray icon removed');
+  }
+}
+
+/** Bring the window back, recreating it if it was ever destroyed. */
+function showMainWindow() {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  if (!mainWindow.isVisible()) mainWindow.show();
+  mainWindow.focus();
+}
+
+/** Quit for real, bypassing the hide-to-tray path. */
+function quitApp() {
+  isQuitting = true;
+  app.quit();
+}
+
+/**
+ * The tray icon is the only way back to a hidden window, so it is created once
+ * the app is ready and kept for the whole session. It also gives the user an
+ * explicit "Quit" that is not the window's close button.
+ */
+function createTray() {
+  if (tray) return tray;
+  let image = nativeImage.createFromPath(path.join(__dirname, '..', 'assets', 'tray.png'));
+  if (!image.isEmpty()) image = image.resize({ width: 16, height: 16 });
+  tray = new Tray(image);
+  tray.setToolTip('MacroBoard');
+  tray.setContextMenu(
+    Menu.buildFromTemplate([
+      { label: 'Open MacroBoard', click: showMainWindow },
+      { type: 'separator' },
+      {
+        label: 'Stop all macros',
+        click: () => {
+          if (orchestrator) orchestrator.stop('stopped from the tray');
+        },
+      },
+      { type: 'separator' },
+      { label: 'Quit MacroBoard', click: quitApp },
+    ])
+  );
+  tray.on('click', showMainWindow);
+  tray.on('double-click', showMainWindow);
+  log('info', 'tray icon created');
+  return tray;
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1440,
@@ -258,6 +367,28 @@ function createWindow() {
   });
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
+
+  // "Background mode" turns the close button into "hide to the background".
+  // Everything that actually ends the process (tray Quit, an update install,
+  // app.quit) sets isQuitting first, so a real quit is never blocked here.
+  mainWindow.on('close', (event) => {
+    if (isQuitting || !backgroundModeEnabled()) return;
+    event.preventDefault();
+    mainWindow.hide();
+    log('info', 'window closed; background mode is on, hiding instead of quitting');
+    if (!trayBalloonShown && tray && typeof tray.displayBalloon === 'function') {
+      trayBalloonShown = true;
+      try {
+        tray.displayBalloon({
+          title: 'MacroBoard is still running',
+          content: 'Armed macros keep working in the background. Use the tray icon to reopen or quit.',
+        });
+      } catch (err) {
+        /* balloons are cosmetic */
+      }
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -598,10 +729,13 @@ function registerIpc(services) {
   // the store but had never been called by anything. setSettings MERGES its patch,
   // so writing one key cannot clobber another.
   handle('mb:settings:get', async () => ({ ok: true, settings: store.getSettings() }));
-  handle('mb:settings:set', async (payload) => ({
-    ok: true,
-    settings: store.setSettings(payload && payload.patch ? payload.patch : {}),
-  }));
+  handle('mb:settings:set', async (payload) => {
+    const settings = store.setSettings(payload && payload.patch ? payload.patch : {});
+    // The tray icon can be switched on/off while the app is running, so apply the
+    // preference immediately instead of waiting for the next launch.
+    syncTray();
+    return { ok: true, settings };
+  });
 
   // ---- logging straight from the renderer ---------------------------
   ipcMain.on('mb:log', (_event, payload) => {
@@ -619,10 +753,7 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
 } else {
   app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore();
-      mainWindow.focus();
-    }
+    showMainWindow();
   });
 
   app.whenReady().then(() => {
@@ -635,6 +766,7 @@ if (!app.requestSingleInstanceLock()) {
     const services = buildServices();
     registerIpc(services);
     createWindow();
+    syncTray();
 
     // Checked once, well after launch, and only when packaged. A slow or absent
     // network must not delay the window appearing, so this is deliberately not
@@ -650,14 +782,27 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   app.on('window-all-closed', () => {
+    // With background mode on, the window is normally only hidden (the `close`
+    // handler prevents the destruction, so this never fires). If the window did
+    // go away for another reason, stay alive instead of quitting.
+    if (!isQuitting && backgroundModeEnabled()) {
+      log('info', 'all windows closed; staying alive because background mode is on');
+      return;
+    }
     // Tear the eyedropper down first. Its chip is a hidden click-through window
     // and its hook listener is long-lived, so neither goes away on its own.
     if (eyedropperSession) eyedropperSession.cancel();
     previewChip.destroy();
     if (orchestrator) orchestrator.shutdown();
+    if (tray) {
+      tray.destroy();
+      tray = null;
+    }
     app.quit();
   });
   app.on('before-quit', () => {
+    // Set first: a quit must never be turned into a hide-to-tray.
+    isQuitting = true;
     // Make sure nothing is left held down when the app goes away.
     if (orchestrator) orchestrator.shutdown();
   });

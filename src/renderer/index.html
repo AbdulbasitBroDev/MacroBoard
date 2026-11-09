@@ -37,6 +37,25 @@
           <span id="compile-text">—</span>
         </div>
 
+        <div class="bg-wrap">
+          <label
+            class="bg-mode"
+            title="When ticked, closing the window keeps MacroBoard running so armed macros keep working. When unticked, closing the app stops everything."
+          >
+            <input type="checkbox" id="chk-background-mode" />
+            <span>Background mode</span>
+          </label>
+          <div id="bg-menu" class="ctx-menu bg-menu hidden" role="menu" aria-label="Tray icon">
+            <div class="ctx-head">When running in background</div>
+            <button type="button" data-tray-icon="on" role="menuitem">
+              <span class="rec-check" aria-hidden="true"></span>Create tray icon
+            </button>
+            <button type="button" data-tray-icon="off" role="menuitem">
+              <span class="rec-check" aria-hidden="true"></span>Don't create tray icon
+            </button>
+          </div>
+        </div>
+
         <div class="rec-wrap">
           <button id="btn-record" class="btn btn-ghost" title="Record real input into blocks">
             <span class="rec-dot"></span> Record
